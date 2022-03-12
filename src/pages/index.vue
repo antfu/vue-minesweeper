@@ -76,6 +76,7 @@ watchEffect(() => {
           v-for="block, x in row" :key="x"
           :block="block"
           @click="play.onClick(block)"
+          @dblclick="play.autoExpand(block)"
           @contextmenu.prevent="play.onRightClick(block)"
         />
       </div>
