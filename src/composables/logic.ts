@@ -191,7 +191,7 @@ export class GamePlay {
     if (flags === block.adjacentMines) {
       siblings.forEach((i) => {
         i.revealed = true
-        if (i.mine)
+        if (!i.flagged && i.mine)
           this.onGameOver('lost')
       })
     }
