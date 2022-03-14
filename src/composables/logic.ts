@@ -136,7 +136,7 @@ export class GamePlay {
   }
 
   onClick(block: BlockState) {
-    if (this.state.value.status !== 'play')
+    if (this.state.value.status !== 'play' || block.flagged)
       return
 
     if (!this.state.value.mineGenerated) {
@@ -185,6 +185,9 @@ export class GamePlay {
   }
 
   autoExpand(block: BlockState) {
+    if (this.state.value.status !== 'play' || block.flagged)
+      return
+
     const siblings = this.getSiblings(block)
     const flags = siblings.reduce((a, b) => a + (b.flagged ? 1 : 0), 0)
     const notRevealed = siblings.reduce((a, b) => a + (!b.revealed && !b.flagged ? 1 : 0), 0)
