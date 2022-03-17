@@ -120,7 +120,8 @@ export class GamePlay {
     this.getSiblings(block)
       .forEach((s) => {
         if (!s.revealed) {
-          s.revealed = true
+          if (!s.flagged)
+            s.revealed = true
           this.expendZero(s)
         }
       })
