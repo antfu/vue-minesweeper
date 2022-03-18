@@ -13,13 +13,13 @@ const directions = [
   [0, 1],
 ]
 
-type GameStatus = 'play' | 'won' | 'lost'
+type GameStatus = 'ready' | 'play' | 'won' | 'lost'
 
 interface GameState {
   board: BlockState[][]
   mineGenerated: boolean
   status: GameStatus
-  startMS: number
+  startMS?: number
   endMS?: number
 }
 
@@ -54,9 +54,8 @@ export class GamePlay {
     this.mines = mines
 
     this.state.value = {
-      startMS: +Date.now(),
       mineGenerated: false,
-      status: 'play',
+      status: 'ready',
       board: Array.from({ length: this.height }, (_, y) =>
         Array.from({ length: this.width },
           (_, x): BlockState => ({
@@ -137,6 +136,10 @@ export class GamePlay {
   }
 
   onClick(block: BlockState) {
+    if (this.state.value.status === 'ready') {
+      this.state.value.status = 'play'
+      this.state.value.startMS = +new Date()
+    }
     if (this.state.value.status !== 'play' || block.flagged)
       return
 
