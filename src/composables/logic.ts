@@ -176,15 +176,12 @@ export class GamePlay {
   }
 
   checkGameState() {
-    if (!this.state.value.mineGenerated)
+    if (!this.state.value.mineGenerated || this.state.value.status !== 'play')
       return
     const blocks = this.board.flat()
 
-    if (blocks.every(block => block.revealed || block.flagged || block.mine)) {
-      if (blocks.some(block => block.flagged && !block.mine))
-        this.onGameOver('lost')
-      else
-        this.onGameOver('won')
+    if (!blocks.some(block => !block.mine && !block.revealed)) {
+      this.onGameOver('won')
     }
   }
 
