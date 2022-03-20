@@ -180,9 +180,8 @@ export class GamePlay {
       return
     const blocks = this.board.flat()
 
-    if (!blocks.some(block => !block.mine && !block.revealed)) {
+    if (!blocks.some(block => !block.mine && !block.revealed))
       this.onGameOver('won')
-    }
   }
 
   autoExpand(block: BlockState) {

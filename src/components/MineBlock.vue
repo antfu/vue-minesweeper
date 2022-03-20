@@ -4,6 +4,15 @@ import { isDev } from '~/composables'
 
 defineProps<{ block: BlockState }>()
 
+const emit = defineEmits<{
+  (e: 'lrclick', event: MouseEvent): void
+}>()
+
+function whichButtons(event: MouseEvent) {
+  if (event.buttons === 3)
+    emit('lrclick', event)
+}
+
 const numberColors = [
   'text-transparent',
   'text-blue-500',
@@ -35,6 +44,7 @@ function getBlockClass(block: BlockState) {
     min-w-8 min-h-8 m="1px"
     border="0.5 gray-400/10"
     :class="getBlockClass(block)"
+    @mousedown="whichButtons"
   >
     <template v-if="block.flagged">
       <div i-mdi-flag text-red />
