@@ -2,7 +2,7 @@
 // import { isDev, toggleDev } from '~/composables'
 import { GamePlay } from '~/composables/logic'
 
-const play = new GamePlay(6, 6, 3)
+const play = new GamePlay(9, 9, 10)
 
 const now = $(useNow())
 const timerMS = $computed(() => Math.round(((play.state.value.endMS ?? +now) - (play.state.value.startMS ?? +now)) / 1000))
@@ -13,7 +13,7 @@ const state = $computed(() => play.board)
 const mineRest = $computed(() => {
   if (!play.state.value.mineGenerated)
     return play.mines
-  return play.blocks.reduce((a, b) => a + (b.mine ? 1 : 0) - (b.flagged ? 1 : 0), 0)
+  return play.blocks.reduce((a, b) => a - (b.flagged ? 1 : 0), play.mines)
 })
 
 function newGame(difficulty: 'easy' | 'medium' | 'hard') {
@@ -76,7 +76,7 @@ watchEffect(() => {
           v-for="block, x in row" :key="x"
           :block="block"
           @click="play.onClick(block)"
-          @dblclick="play.autoExpand(block)"
+          @lrclick="play.autoExpand(block)"
           @contextmenu.prevent="play.onRightClick(block)"
         />
       </div>
