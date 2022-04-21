@@ -48,7 +48,6 @@ export class GamePlay {
     height = this.height,
     mines = this.mines,
   ) {
-    // this.random = createSeedrandom('hello')
     this.width = width
     this.height = height
     this.mines = mines
