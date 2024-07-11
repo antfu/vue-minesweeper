@@ -12,8 +12,8 @@ const state = $computed(() => play.board)
 
 const mineRest = $computed(() => {
   if (!play.state.value.mineGenerated)
-    return play.mines
-  return play.blocks.reduce((a, b) => a - (b.flagged ? 1 : 0), play.mines)
+    return play.state.value.mines
+  return play.blocks.reduce((a, b) => a - (b.flagged ? 1 : 0), play.state.value.mines)
 })
 
 function newGame(difficulty: 'easy' | 'medium' | 'hard') {
@@ -25,7 +25,7 @@ function newGame(difficulty: 'easy' | 'medium' | 'hard') {
       play.reset(16, 16, 40)
       break
     case 'hard':
-      play.reset(16, 30, 99)
+      play.reset(30, 16, 99)
       break
   }
 }
@@ -78,6 +78,7 @@ watchEffect(() => {
           @click="play.onClick(block)"
           @lrclick="play.autoExpand(block)"
           @contextmenu.prevent="play.onRightClick(block)"
+          @dblclick="play.onDblClick(block)"
         />
       </div>
     </div>

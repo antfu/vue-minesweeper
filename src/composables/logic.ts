@@ -19,6 +19,7 @@ interface GameState {
   board: BlockState[][]
   mineGenerated: boolean
   status: GameStatus
+  mines: number
   startMS?: number
   endMS?: number
 }
@@ -53,6 +54,7 @@ export class GamePlay {
     this.mines = mines
 
     this.state.value = {
+      mines: this.mines,
       mineGenerated: false,
       status: 'ready',
       board: Array.from({ length: this.height }, (_, y) =>
@@ -111,8 +113,8 @@ export class GamePlay {
     })
   }
 
-  expendZero(block: BlockState) {
-    if (block.adjacentMines)
+  expendZero(block: BlockState, flag: boolean = true) {
+    if (flag && (block.adjacentMines || block.mine))
       return
 
     this.getSiblings(block)
@@ -154,6 +156,25 @@ export class GamePlay {
     }
 
     this.expendZero(block)
+  }
+
+  onDblClick(block: BlockState) {
+    if (this.state.value.status !== 'play' || !block.revealed)
+      return
+
+    const { mineNum, flagNum, trueFlag } = this.getSiblings(block).reduce((prev, cur) => {
+      if (cur.mine)
+        prev.mineNum++
+      if (cur.flagged)
+        prev.flagNum++
+      if (cur.mine && cur.flagged)
+        prev.trueFlag++
+      if (!cur.mine && cur.flagged)
+        this.onGameOver('lost')
+      return prev
+    }, { mineNum: 0, flagNum: 0, trueFlag: 0 })
+    if (mineNum === flagNum && flagNum === trueFlag)
+      this.expendZero(block, false)
   }
 
   getSiblings(block: BlockState) {
